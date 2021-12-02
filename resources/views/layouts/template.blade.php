@@ -4,7 +4,7 @@
 <!-- HEAD -->
 @include('layouts.head')
 
-<body class="mini-navbar">
+<body>
 
     <!-- SIDEBAR -->
     @include('layouts.sidebar')

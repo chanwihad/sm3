@@ -32,7 +32,7 @@
         <div class="col-md-12">
             <div class="sm3-card">
                 <div class="table-responsive">
-                    <table class="table table-hover" id="agenda-meeting">
+                    <table class="table table-hover" id="daftar-meeting">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -47,7 +47,7 @@
                         <tbody>
                             @foreach ($data as $datas)
                             <tr>
-                                <th scope="row">1</th>
+                                <th scope="row">{{ $loop->iteration }}</th>
                                 <td>
                                     <b>Judul Rapat</b><br>
                                     {{$datas->title}}<br>
@@ -95,9 +95,16 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-primary" href="">Hadir</a>
-                                    <a class="btn btn-danger" href="">Sakit</a>
-                                    <a class="btn btn-warning" href="">Ijin</a>
+                                    @if($datas->attendance_id)
+                                    <i>@if($datas->attendances_status == 0) Alpha @elseif($datas->attendances_status == 1) Hadir @elseif($datas->attendances_status == 2) Sakit @elseif($datas->attendances_status == 3) Izin @endif</i>
+                                    @else
+                                    <form action="{{route('absenCreate')}}" method="get">
+                                        <input type="hidden" name="id" id="id" value="{{$datas->id}}" />
+                                        <button class="btn btn-primary" id="status" name="status" value="1" type="submit">Hadir</button>
+                                        <button class="btn btn-danger" id="status" name="status" value="2" type="submit">Sakit</button>
+                                        <button class="btn btn-warning" id="status" name="status" value="3" type="submit">Ijin</button>
+                                    </form>
+                                    @endif
                                 </td>
                                 <td>
                                     <a class="btn btn-primary fa fa-info-circle" href="{{route('agendaDetail', $datas->id)}}"></a>

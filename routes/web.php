@@ -34,12 +34,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/management/meeting/create', [App\Http\Controllers\MeetingController::class, 'meetingCreate'])->name('meetingCreate');
     Route::get('/management/meeting/{id}/update', [App\Http\Controllers\MeetingController::class, 'meetingUpdate'])->name('meetingUpdate');
     Route::get('/management/meeting/{id}/delete', [App\Http\Controllers\MeetingController::class, 'meetingDelete'])->name('meetingDelete');
-    // Route::get('/management/meeting/{id}/delete', [App\Http\Livewire\Meeting\MeetingList::class, 'meetingDelete'])->name('meetingDelete');
     Route::post('/management/meeting/save', [App\Http\Controllers\MeetingController::class, 'meetingSave'])->name('meetingSave');
     
     //ATTENDENCE ROUTE
     Route::get('/meeting', [App\Http\Controllers\MeetingController::class, 'agendaList'])->name('agendaList');
     Route::get('/meeting/{id}/detail', [App\Http\Controllers\MeetingController::class, 'agendaDetail'])->name('agendaDetail');
+
+    //ABSEN ROUET
+    Route::get('/absen/create', [App\Http\Controllers\MeetingController::class, 'absenCreate'])->name('absenCreate');
 
     //PROFILE ROUTE
     Route::get('/profile/detail', [App\Http\Controllers\UserController::class, 'profileDetail'])->name('profileDetail');

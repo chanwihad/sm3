@@ -30,7 +30,7 @@ class MeetingController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index() 
+    public function index()
     {
         if (\Auth::user()) {
             return view('meeting.dashboard', [
@@ -39,13 +39,13 @@ class MeetingController extends Controller
             ]);
         }
     }
-    
+
     public function meetingList()
     {
         $this->authorize('manage meeting', Meeting::class);
         $user = \Auth::user();
         $data = Meeting::getMeeting();
-        if($data){
+        if ($data) {
             return view('/meeting/meeting-list', ['data' => $data, 'user' => $user]);
         }
         return abort(404, "User tidak ditemukan");
@@ -61,7 +61,7 @@ class MeetingController extends Controller
         $userrole = Model_has_role::getRoleUser($user->id);
         return view('/meeting/meeting-detail', ['detail' => $detail, 'user' => $user, 'notulensi' => $notulensi, 'peserta' => $peserta, 'userrole' => $userrole, 'info' => 'Meeting']);
     }
-    
+
     public function meetingCreate()
     {
         $this->authorize('manage meeting', Meeting::class);
@@ -153,8 +153,8 @@ class MeetingController extends Controller
     {
         $this->authorize('manage meeting', Meeting::class);
         $user = \Auth::user();
-        $data = Meeting::getMeeting();
-        if($data){
+        $data = Meeting::getAgenda();
+        if ($data) {
             return view('/meeting/agenda-list', ['data' => $data, 'user' => $user]);
         }
         return abort(404, "User tidak ditemukan");
@@ -170,7 +170,28 @@ class MeetingController extends Controller
         $userrole = Model_has_role::getRoleUser($user->id);
         return view('/meeting/meeting-detail', ['detail' => $detail, 'user' => $user, 'notulensi' => $notulensi, 'peserta' => $peserta, 'userrole' => $userrole, 'info' => 'Agenda']);
     }
-    
+
+
+    public function absenCreate(Request $request)
+    {
+        $this->authorize('manage meeting', Meeting::class);
+        $user = \Auth::user();
+        $data = [
+            'meeting_id' => $request->id,
+            'ref_user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'division' => $user->division,
+            'position' => $user->position,
+            'phone' => $user->phone,
+            'status' => $request->status,
+        ];
+        $attendance = Attendance::attendanceSave($data);
+        if ($attendance) {
+            return back()->with('success', 'Berhasil menyimpan data meeting baru');
+        }
+        return back()->with('error', 'Gagal memperbarui data meeting');
+    }
 
 
 
@@ -182,8 +203,6 @@ class MeetingController extends Controller
 
 
 
-
-    
     public function simpanNotulensi(Request $request)
     {
         $user = \Auth::user();
@@ -228,7 +247,6 @@ class MeetingController extends Controller
             return view('/meeting/cek-notulensi', ['data' => $data]);
         }
         return abort(404, "Notulensi tidak ditemukan");
-
     }
 
     public function ubahNotulensi(String $Id)
@@ -374,7 +392,6 @@ class MeetingController extends Controller
 
         return redirect('event/registrasi/' . $event->id);
     }
-
 }
 
 

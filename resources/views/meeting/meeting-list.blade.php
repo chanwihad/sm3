@@ -57,7 +57,7 @@
                             @foreach ($data as $datas)
                             <tr>
                                 <a href="{{route('meetingCreate')}}">
-                                    <th scope="row">1</th>
+                                    <th scope="row">{{ $loop->iteration }}</th>
                                     <td>
                                         <b>Judul Rapat</b><br>
                                         {{$datas->title}}<br>

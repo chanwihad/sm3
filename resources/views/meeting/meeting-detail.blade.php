@@ -51,7 +51,6 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Agenda Rapat</th>
                                 <th scope="col">Jadwal</th>
                                 <th scope="col">Status</th>
@@ -62,7 +61,6 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th scope="row">1</th>
                                 <td>
                                     <b>Judul Rapat</b><br>
                                     {{$detail->tittle}}<br>
@@ -111,7 +109,16 @@
                                 </td>
                                 @if($info == 'Agenda')
                                 <td>
-                                    <a class="btn btn-primary">Hadir</a>
+                                    @if($detail->attendance_id)
+                                    <i> @if($detail->attendances_status == 0) Alpha @elseif($detail->attendances_status == 1) Hadir @elseif($detail->attendances_status == 2) Sakit @elseif($detail->attendances_status == 3) Izin @endif </i>
+                                    @else
+                                    <form action="{{route('absenCreate')}}" method="get">
+                                        <input type="hidden" name="id" id="id" value="{{$detail->id}}" />
+                                        <button class="btn btn-primary" id="status" name="status" value="1" type="submit">Hadir</button>
+                                        <button class="btn btn-danger" id="status" name="status" value="2" type="submit">Sakit</button>
+                                        <button class="btn btn-warning" id="status" name="status" value="3" type="submit">Ijin</button>
+                                    </form>
+                                    @endif
                                 </td>
                                 @endif
                             </tr>
@@ -192,7 +199,7 @@
                 </div> <br>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="daftar-absen">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -233,5 +240,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#daftar-absen').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
 
 @endsection

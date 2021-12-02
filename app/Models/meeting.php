@@ -72,6 +72,11 @@ class meeting extends Model
             $data = Meeting::where('participant', 'like', '%Rapat Besar%')
                 ->orWhere('participant', 'like', '%' . $user->division . '%')
                 ->orderBy('created_at', 'desc')
+                ->leftJoin('attendances', function ($join) {
+                    $join->on('meetings.id', '=', 'attendances.meeting_id')
+                        ->where('ref_user_id', '=', \Auth::user()->id);
+                })
+                ->select('meetings.id as id', 'attendances.id as attendance_id', 'ref_user_id', 'title', 'description', 'date', 'time', 'place', 'creator', 'participant', 'meetings.status', 'attendances.status as attendances_status', 'meetings.created_at', 'meetings.updated_at')
                 ->get();
             return $data;
         } else if ($user->hasRole('admin divisi')) {
@@ -79,12 +84,22 @@ class meeting extends Model
                 ->orWhere('participant', 'like', '%Rapat Besar%')
                 ->orWhere('participant', 'like', '%' . $user->division . '%')
                 ->orderBy('created_at', 'desc')
+                ->leftJoin('attendances', function ($join) {
+                    $join->on('meetings.id', '=', 'attendances.meeting_id')
+                        ->where('ref_user_id', '=', \Auth::user()->id);
+                })
+                ->select('meetings.id as id', 'attendances.id as attendance_id', 'ref_user_id', 'title', 'description', 'date', 'time', 'place', 'creator', 'participant', 'meetings.status', 'attendances.status as attendances_status', 'meetings.created_at', 'meetings.updated_at')
                 ->get();
             return $data;
         } else if ($user->hasRole('pegawai')) {
             $data = Meeting::Where('participant', 'like', '%Rapat Besar%')
                 ->orWhere('participant', 'like',  '%' . $user->division . '%')
                 ->orderBy('created_at', 'desc')
+                ->leftJoin('attendances', function ($join) {
+                    $join->on('meetings.id', '=', 'attendances.meeting_id')
+                        ->where('ref_user_id', '=', \Auth::user()->id);
+                })
+                ->select('meetings.id as id', 'attendances.id as attendance_id', 'ref_user_id', 'title', 'description', 'date', 'time', 'place', 'creator', 'participant', 'meetings.status', 'attendances.status as attendances_status', 'meetings.created_at', 'meetings.updated_at')
                 ->get();
             return $data;
         }
@@ -92,7 +107,14 @@ class meeting extends Model
 
     public static function getMeetingDetail($id)
     {
-        return Meeting::where('id', $id)->first();;
+        return Meeting::where('meetings.id', $id)
+            // ->leftJoin('attendances', 'meetings.id', '=', 'attendances.meeting_id')
+            ->leftJoin('attendances', function ($join) {
+                $join->on('meetings.id', '=', 'attendances.meeting_id')
+                    ->where('ref_user_id', '=', \Auth::user()->id);
+            })
+            ->select('meetings.id as id', 'attendances.id as attendance_id', 'ref_user_id', 'title', 'description', 'date', 'time', 'place', 'creator', 'participant', 'meetings.status', 'attendances.status as attendances_status', 'meetings.created_at', 'meetings.updated_at')
+            ->first();
     }
 
     public static function getMeetingUpdate($id)

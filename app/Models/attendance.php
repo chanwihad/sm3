@@ -14,6 +14,11 @@ class attendance extends Model
         return Attendance::where('meeting_id', $id)->orderBy('created_at', 'asc')->get();
     }
 
+    public static function attendanceSave($data)
+    {
+        return Attendance::insert($data);
+    }
+
     public function tampilJam(): string
     {
         if (empty($this->created_at)) {
@@ -32,7 +37,7 @@ class attendance extends Model
 
     public function tampilAbsen(): string
     {
-        if (empty($this->status)) {
+        if (empty($this->status || $this->status == 0)) {
             return 'Alpha';
         }
         if ($this->status == 1) {

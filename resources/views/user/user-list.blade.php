@@ -23,7 +23,7 @@
                 </div> <br><br><br>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="daftar-user">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -40,7 +40,7 @@
                         <tbody>
                             @foreach ($data as $datas)
                             <tr>
-                                <th scope="row">1</th>
+                                <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $datas->name }}</td>
                                 <td>{{ $datas->rolename }}</td>
                                 <td>{{ $datas->division }}</td>
@@ -63,5 +63,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#daftar-user').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
 
 @endsection
